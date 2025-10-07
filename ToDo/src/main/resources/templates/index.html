@@ -137,7 +137,7 @@
                 <textarea class="form-control" id="description" th:field="*{description}" rows="3"></textarea>
             </div>
             <div class="col-12">
-                <button type="submit" class="btn btn-success" th:disabled="${user == null}">Добавить задачу</button>
+                <button type="submit" id="btnAddTask" class="btn btn-success" th:disabled="${user == null}">Добавить задачу</button>
             </div>
         </form>
     </div>
@@ -221,6 +221,37 @@
         var loginModal = new bootstrap.Modal(document.getElementById('loginModal'));
         loginModal.show();
     });
+</script>
+
+<script>
+        const btn = document.getElementById('btnAddTask');
+        btn.addEventListener('click', (e) =>  {            
+            e.preventDefault();
+
+            const title = document.getElementById('title').value;
+            const desc = document.getElementById('description').value;
+
+            //console.log(title);
+            //console.log(desc);
+
+            let data = {
+                title: title,
+                description: desc
+            };
+
+            fetch('/api/todo', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(data)
+            }).then(resp => {
+                resp.json();
+            }).then(answer => {
+                console.log(answer);
+            });
+
+        });
 </script>
 
 </body>
