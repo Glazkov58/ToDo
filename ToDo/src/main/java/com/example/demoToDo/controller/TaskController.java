@@ -1,5 +1,7 @@
 package com.example.demoToDo.controller;
 
+
+
 import java.util.ArrayList;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,13 +29,14 @@ public class TaskController {
     public String getAllTasks(HttpSession session, Model model) {
         User currentUser = (User) session.getAttribute("currentUser");
         if(currentUser == null) {
+        
             // Пользователь не вошёл — покажем index.html, но без задач
             model.addAttribute("tasks", new ArrayList<Task>());
             model.addAttribute("task",new Task());
             model.addAttribute("showLoginModal", true); // ← флаг для открытия модалки
             return "index";
         }
-        model.addAttribute("tasks",taskRepository.findAll());
+        model.addAttribute("tasks",taskRepository.findByUser(currentUser));
         model.addAttribute("task",new Task());
         model.addAttribute("user", currentUser);
         return "index";

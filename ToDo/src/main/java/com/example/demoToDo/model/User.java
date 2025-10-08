@@ -1,5 +1,6 @@
 package com.example.demoToDo.model;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -15,7 +16,9 @@ import jakarta.persistence.UniqueConstraint;
 
 @Entity
 @Table(name = "users",uniqueConstraints = @UniqueConstraint(columnNames = "email"))
-public class User {
+public class User implements Serializable {
+    
+    private static final long serialVersionUID = 1L;
 
     @Id 
     @GeneratedValue(strategy = GenerationType.IDENTITY)
