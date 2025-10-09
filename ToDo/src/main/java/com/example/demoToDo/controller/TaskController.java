@@ -31,13 +31,13 @@ public class TaskController {
         if(currentUser == null) {
         
             // Пользователь не вошёл — покажем index.html, но без задач
-            model.addAttribute("tasks", new ArrayList<Task>());
-            model.addAttribute("task",new Task());
+            //model.addAttribute("tasks", new ArrayList<Task>());
+            //model.addAttribute("task",new Task());
             model.addAttribute("showLoginModal", true); // ← флаг для открытия модалки
             return "index";
         }
-        model.addAttribute("tasks",taskRepository.findByUser(currentUser));
-        model.addAttribute("task",new Task());
+        //model.addAttribute("tasks",taskRepository.findByUser(currentUser));
+        //model.addAttribute("task",new Task());
         model.addAttribute("user", currentUser);
         return "index";
     }
