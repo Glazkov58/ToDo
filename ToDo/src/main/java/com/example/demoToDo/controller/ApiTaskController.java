@@ -4,7 +4,6 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpEntity;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -13,7 +12,7 @@ import com.example.demoToDo.model.TaskDTO;
 import com.example.demoToDo.model.User;
 import com.example.demoToDo.repository.TaskRepository;
 
-import jakarta.servlet.http.HttpSession;
+import jakarta.servlet.http.HttpServletRequest;
 
 @RestController
 @RequestMapping("/api/todo")
@@ -23,8 +22,8 @@ public class ApiTaskController {
     private TaskRepository taskRepository;
 
     @PostMapping
-    public ResponseEntity<?> addTask(@RequestBody TaskDTO taskDto, HttpSession session) {
-        User currentUser = (User) session.getAttribute("currentUser");
+    public ResponseEntity<?> addTask(@RequestBody TaskDTO taskDto, HttpServletRequest request) {
+        User currentUser = (User) request.getAttribute("currentUser");
         if(currentUser == null) {
             return ResponseEntity.status(403).build();
         }
@@ -42,8 +41,8 @@ public class ApiTaskController {
     }
 
     @GetMapping
-    public ResponseEntity<List<TaskDTO>> getAllTasks(HttpSession session) {
-        User currentUser = (User) session.getAttribute("currentUser");
+    public ResponseEntity<List<TaskDTO>> getAllTasks(HttpServletRequest request) {
+        User currentUser = (User) request.getAttribute("currentUser");
         if (currentUser == null) {
             return ResponseEntity.status(403).build();
         }
@@ -53,8 +52,8 @@ public class ApiTaskController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<TaskDTO> getTask(@PathVariable Long id, HttpSession session) {
-        User currentUser = (User) session.getAttribute("currentUser");
+    public ResponseEntity<TaskDTO> getTask(@PathVariable Long id, HttpServletRequest request) {
+        User currentUser = (User) request.getAttribute("currentUser");
         if (currentUser == null) {
             return ResponseEntity.status(403).build();
         }
@@ -66,8 +65,8 @@ public class ApiTaskController {
     }
     
     @PutMapping("/{id}")
-    public ResponseEntity<?> updateTask(@PathVariable Long id, @RequestBody TaskDTO taskDto, HttpSession session) {
-        User currentUser = (User) session.getAttribute("currentUser");
+    public ResponseEntity<?> updateTask(@PathVariable Long id, @RequestBody TaskDTO taskDto, HttpServletRequest request) {
+        User currentUser = (User) request.getAttribute("currentUser");
         if (currentUser == null) {
             return ResponseEntity.status(403).build();
         }
@@ -89,8 +88,8 @@ public class ApiTaskController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<?> deleteTask(@PathVariable Long id, HttpSession session) {
-        User currentUser = (User) session.getAttribute("currentUser");
+    public ResponseEntity<?> deleteTask(@PathVariable Long id, HttpServletRequest request) {
+        User currentUser = (User) request.getAttribute("currentUser");
         if (currentUser == null) {
             return ResponseEntity.status(403).build();
         }
