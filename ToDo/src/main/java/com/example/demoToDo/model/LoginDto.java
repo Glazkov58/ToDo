@@ -3,6 +3,7 @@ package com.example.demoToDo.model;
 public class LoginDto {
      private String email;
      private String password;
+     private String name;
      
      public String getEmail() {
          return email;
@@ -16,4 +17,7 @@ public class LoginDto {
      public void setPassword(String password) {
          this.password = password;
      }
+
+     public void setName(String name) { this.name = name; }
+     public String getName() { return name; }
 }

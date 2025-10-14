@@ -12,10 +12,12 @@ import com.example.demoToDo.model.TaskDTO;
 import com.example.demoToDo.model.User;
 import com.example.demoToDo.repository.TaskRepository;
 
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.servlet.http.HttpServletRequest;
 
 @RestController
 @RequestMapping("/api/todo")
+@SecurityRequirement(name = "bearerAuth") // Применяется ко всем методам в контроллере
 public class ApiTaskController {
     
     @Autowired

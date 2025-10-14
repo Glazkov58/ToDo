@@ -12,6 +12,7 @@ import com.example.demoToDo.model.LoginDto;
 import com.example.demoToDo.model.User;
 import com.example.demoToDo.repository.UserRepository;
 
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.servlet.http.HttpServletRequest;
 
 @RestController
@@ -39,24 +40,28 @@ public class ApiAuthController {
     }
 
     @PostMapping("/register")
-public ResponseEntity<?> register(@RequestBody LoginDto dto) {
-    if (userRepository.findByEmail(dto.getEmail()).isPresent()) {
-        return ResponseEntity.badRequest().body("Email уже используется");
-    }
-    User user = new User();
-    user.setEmail(dto.getEmail());
-    user.setName(dto.getEmail().split("@")[0]); // временно
-    user.setPassword(dto.getPassword());
-    userRepository.save(user);
-    return ResponseEntity.ok("Регистрация успешна");
-    }
+    public ResponseEntity<?> register(@RequestBody LoginDto dto) {
+        if (userRepository.findByEmail(dto.getEmail()).isPresent()) {
+            return ResponseEntity.badRequest().body("Email уже используется");
+        }
+        User user = new User();
+        user.setEmail(dto.getEmail());
+        user.setName(dto.getName()); // временно
+        user.setPassword(dto.getPassword());
+        userRepository.save(user);
+        return ResponseEntity.ok("Регистрация успешна");
+        }
 
     @GetMapping("/me")
-public ResponseEntity<User> getProfile(HttpServletRequest request) {
+    @SecurityRequirement(name = "bearerAuth")
+    public ResponseEntity<?> getProfile(HttpServletRequest request) {
     User currentUser = (User) request.getAttribute("currentUser");
     if (currentUser == null) {
         return ResponseEntity.status(403).build();
     }
-    return ResponseEntity.ok(currentUser);
+    LoginDto resp = new LoginDto();
+    resp.setName(currentUser.getName());
+    resp.setEmail(currentUser.getEmail());
+    return ResponseEntity.ok(resp);    
     }
 }
