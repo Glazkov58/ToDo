@@ -1,7 +1,11 @@
 package com.example.demoToDo.model;
 
+import jakarta.validation.constraints.NotBlank;
+
 public class LoginDto {
+     @NotBlank
      private String email;
+     @NotBlank
      private String password;
      private String name;
      

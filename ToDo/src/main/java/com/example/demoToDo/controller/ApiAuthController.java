@@ -14,6 +14,7 @@ import com.example.demoToDo.repository.UserRepository;
 
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.validation.Valid;
 
 @RestController
 @RequestMapping("/api/auth")
@@ -27,8 +28,11 @@ public class ApiAuthController {
     }
 
     @PostMapping
-    public ResponseEntity<?> login(@RequestBody LoginDto logindto){
+    public ResponseEntity<?> login(@Valid @RequestBody LoginDto logindto){
         var userOpt = userRepository.findByEmail(logindto.getEmail());
+        if (userOpt.isEmpty()) {
+            return ResponseEntity.badRequest().build();
+        }
         String pass = userOpt.get().getPassword();
         if (logindto.getPassword().equals(pass)){
             // авторизация пройдена
