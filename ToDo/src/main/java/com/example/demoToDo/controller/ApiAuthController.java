@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.example.demoToDo.Services.RedisService;
 import com.example.demoToDo.Utils.JWTUtil;
 import com.example.demoToDo.model.LoginDto;
 import com.example.demoToDo.model.User;
@@ -21,10 +22,12 @@ import jakarta.validation.Valid;
 public class ApiAuthController {
     private UserRepository userRepository;
     private JWTUtil util;
+    private RedisService redisService;
 
-    public ApiAuthController(UserRepository userRepository, JWTUtil util){
+    public ApiAuthController(UserRepository userRepository, JWTUtil util, RedisService redisService){
         this.userRepository = userRepository;
         this.util = util;
+        this.redisService = redisService;
     }
 
     @PostMapping
@@ -37,6 +40,7 @@ public class ApiAuthController {
         if (logindto.getPassword().equals(pass)){
             // авторизация пройдена
             // создать JWT
+            redisService.setValue(userOpt.get().getEmail(), userOpt.get());
             String jwt = util.generateToken(userOpt.get().getEmail());
             return ResponseEntity.ok(jwt);
         }

@@ -1,0 +1,12 @@
+*2
+$6
+SELECT
+$1
+0
+*3
+$3
+SET
+$10
+gg@mail.ru
+$71
+{"id":1,"name":"Павел","email":"gg@mail.ru","password":"12345678"}

@@ -1,9 +1,7 @@
 package com.example.demoToDo.security;
 
 
-import com.example.demoToDo.Services.RedisService;
 import com.example.demoToDo.Utils.JWTUtil;
-import com.example.demoToDo.model.User;
 import com.example.demoToDo.repository.UserRepository;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -19,12 +17,10 @@ public class JWTFilter extends OncePerRequestFilter {
 
     private final JWTUtil jwtUtil;
     private final UserRepository userRepository;
-    private final RedisService redisService;
 
-    public JWTFilter(JWTUtil jwtUtil, UserRepository userRepository, RedisService redisService) {
+    public JWTFilter(JWTUtil jwtUtil, UserRepository userRepository) {
         this.jwtUtil = jwtUtil;
         this.userRepository = userRepository;
-        this.redisService = redisService;
     }
 
     @Override
@@ -38,18 +34,11 @@ public class JWTFilter extends OncePerRequestFilter {
 
             if (jwtUtil.validateToken(jwt)) {
                 String email = jwtUtil.getEmailFromToken(jwt);
-                User user = null;
-                if (redisService.getValue(email) != null) {
-                    user = (User)redisService.getValue(email);
-                } else {
-                    user = userRepository.findByEmail(email).get();
-                    redisService.setValue(email, user);
-                }
-                if (user != null) {
+                var userOpt = userRepository.findByEmail(email);
+                if (userOpt.isPresent()) {
                     // Создаём "фиктивную" аутентификацию (без Spring Security)
-                    request.setAttribute("currentUser", user);
+                    request.setAttribute("currentUser", userOpt.get());
                 }
-                
             }
         }
 
